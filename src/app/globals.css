@@ -1,26 +1,217 @@
 @import "tailwindcss";
 
+/* ------------------------------------------------------------------ */
+/* Tokens                                                              */
+/* ------------------------------------------------------------------ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --ink: #0e1b19;
+  --ink-soft: #1b2e2b;
+  --paper: #faf7f2;
+  --sand: #efe8dc;
+  --sand-deep: #e0d4c0;
+  --brass: #b3865a;
+  --brass-deep: #8a6139;
+  --sea: #2c5b58;
+  --mist: #c9d6d2;
+  --dawn: #e9a58a;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  --color-paper: var(--paper);
+  --color-sand: var(--sand);
+  --color-sand-deep: var(--sand-deep);
+  --color-brass: var(--brass);
+  --color-brass-deep: var(--brass-deep);
+  --color-sea: var(--sea);
+  --color-mist: var(--mist);
+  --color-dawn: var(--dawn);
+
+  --font-sans: var(--font-manrope), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-fraunces), ui-serif, Georgia, serif;
+
+  --ease-out-expo: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* ------------------------------------------------------------------ */
+/* Base                                                                */
+/* ------------------------------------------------------------------ */
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: var(--brass);
+  color: var(--paper);
+}
+
+:focus-visible {
+  outline: 2px solid var(--brass);
+  outline-offset: 3px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Componentes utilitários                                             */
+/* ------------------------------------------------------------------ */
+@layer components {
+  .container-x {
+    width: 100%;
+    max-width: 82rem;
+    margin-inline: auto;
+    padding-inline: 1.25rem;
+  }
+  @media (min-width: 768px) {
+    .container-x {
+      padding-inline: 2.5rem;
+    }
+  }
+
+  .eyebrow {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+  }
+
+  .h-display {
+    font-family: var(--font-display);
+    font-weight: 400;
+    letter-spacing: -0.02em;
+    line-height: 1.02;
+    text-wrap: balance;
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border-radius: 9999px;
+    padding: 0.95rem 1.6rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+    transition:
+      background-color 0.3s var(--ease-out-expo),
+      color 0.3s var(--ease-out-expo),
+      border-color 0.3s var(--ease-out-expo),
+      transform 0.3s var(--ease-out-expo);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn-brass {
+    background: var(--brass);
+    color: #fff;
+  }
+  .btn-brass:hover {
+    background: var(--brass-deep);
+  }
+  .btn-ink {
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .btn-ink:hover {
+    background: var(--ink-soft);
+  }
+  .btn-ghost-light {
+    border: 1px solid rgb(255 255 255 / 0.45);
+    color: #fff;
+    backdrop-filter: blur(6px);
+  }
+  .btn-ghost-light:hover {
+    background: rgb(255 255 255 / 0.14);
+    border-color: #fff;
+  }
+  .btn-ghost-dark {
+    border: 1px solid rgb(14 27 25 / 0.25);
+    color: var(--ink);
+  }
+  .btn-ghost-dark:hover {
+    border-color: var(--ink);
+    background: rgb(14 27 25 / 0.05);
+  }
+
+  .hairline {
+    border-color: rgb(14 27 25 / 0.14);
+  }
+  .on-dark .hairline {
+    border-color: rgb(255 255 255 / 0.16);
+  }
+
+  .field {
+    width: 100%;
+    background: transparent;
+    border: 0;
+    border-bottom: 1px solid rgb(14 27 25 / 0.28);
+    padding: 0.85rem 0;
+    font-size: 1rem;
+    color: inherit;
+    transition: border-color 0.25s;
+  }
+  .field::placeholder {
+    color: rgb(14 27 25 / 0.4);
+  }
+  .field:focus {
+    outline: none;
+    border-color: var(--brass);
+  }
+  .on-dark .field {
+    border-bottom-color: rgb(255 255 255 / 0.35);
+  }
+  .on-dark .field::placeholder {
+    color: rgb(255 255 255 / 0.45);
+  }
+}
+
+/* Entrada da capa em CSS puro: não depende de JS, então o LCP não fica escondido */
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+.rise {
+  animation: rise 1s var(--ease-out-expo) both;
+  animation-delay: var(--d, 0s);
+}
+@media (prefers-reduced-motion: reduce) {
+  .rise {
+    animation: none;
+  }
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  scrollbar-width: none;
+}
+
+/* Textura de ripas (brise) do logotipo, para ornamentos */
+.slats-bg {
+  background-image: repeating-linear-gradient(90deg, currentColor 0 2px, transparent 2px 9px);
 }
